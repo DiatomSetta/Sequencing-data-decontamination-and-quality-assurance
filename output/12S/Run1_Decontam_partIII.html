@@ -382,7 +382,6 @@ on platform)</li>
 99.9% of the sample).</li>
 <li>Step 8: Dissimilarity between PCR (biological) replicates [Sample
 Filtering]</li>
-<li>Step 9: Make sure output is in faire standards</li>
 </ul>
 <p>Produce Part III filtered output file</p>
 <p><strong>Part IV Processing steps</strong></p>
@@ -846,49 +845,49 @@ ggsave(
 <h4>Visualize NMDS</h4>
 <pre class="r"><code>vare.mds &lt;- metaMDS(all.distances.full.pre)</code></pre>
 <pre><code>## Run 0 stress 0.07590487 
-## Run 1 stress 0.07601106 
-## ... Procrustes: rmse 0.03353304  max resid 0.6139668 
-## Run 2 stress 0.0759872 
-## ... Procrustes: rmse 0.02992408  max resid 0.4110334 
-## Run 3 stress 0.07593075 
-## ... Procrustes: rmse 0.01485631  max resid 0.2360975 
-## Run 4 stress 0.07604086 
-## ... Procrustes: rmse 0.04198544  max resid 0.7422337 
-## Run 5 stress 0.07590639 
-## ... Procrustes: rmse 0.005368842  max resid 0.07294086 
-## Run 6 stress 0.07605477 
-## ... Procrustes: rmse 0.04602627  max resid 0.629263 
-## Run 7 stress 0.07596179 
-## ... Procrustes: rmse 0.02474878  max resid 0.3589985 
-## Run 8 stress 0.07593769 
-## ... Procrustes: rmse 0.01860305  max resid 0.2877258 
-## Run 9 stress 0.0759949 
-## ... Procrustes: rmse 0.0347035  max resid 0.4588592 
-## Run 10 stress 0.07608955 
-## ... Procrustes: rmse 0.05109536  max resid 0.6731909 
-## Run 11 stress 0.07605393 
-## ... Procrustes: rmse 0.04560624  max resid 0.7720905 
-## Run 12 stress 0.07594014 
-## ... Procrustes: rmse 0.01854789  max resid 0.2815712 
-## Run 13 stress 0.07594391 
-## ... Procrustes: rmse 0.02107951  max resid 0.3618709 
-## Run 14 stress 0.0760364 
-## ... Procrustes: rmse 0.04087547  max resid 0.7355556 
-## Run 15 stress 0.07604924 
-## ... Procrustes: rmse 0.04380236  max resid 0.7891639 
-## Run 16 stress 0.07607582 
-## ... Procrustes: rmse 0.04896573  max resid 0.7757818 
-## Run 17 stress 0.0759102 
-## ... Procrustes: rmse 0.01150624  max resid 0.1731789 
-## Run 18 stress 0.07597632 
-## ... Procrustes: rmse 0.0261691  max resid 0.3784176 
-## Run 19 stress 0.0760365 
-## ... Procrustes: rmse 0.04197315  max resid 0.5597001 
-## Run 20 stress 0.07593556 
-## ... Procrustes: rmse 0.015361  max resid 0.2227214 
+## Run 1 stress 0.07604762 
+## ... Procrustes: rmse 0.0423467  max resid 0.7161512 
+## Run 2 stress 0.0760514 
+## ... Procrustes: rmse 0.04444736  max resid 0.6876426 
+## Run 3 stress 0.0760421 
+## ... Procrustes: rmse 0.04208446  max resid 0.7178384 
+## Run 4 stress 0.07592142 
+## ... Procrustes: rmse 0.01389795  max resid 0.2198026 
+## Run 5 stress 0.07609185 
+## ... Procrustes: rmse 0.05124725  max resid 0.7264292 
+## Run 6 stress 0.07595179 
+## ... Procrustes: rmse 0.02254904  max resid 0.3740141 
+## Run 7 stress 0.07605216 
+## ... Procrustes: rmse 0.04433304  max resid 0.7404103 
+## Run 8 stress 0.07609146 
+## ... Procrustes: rmse 0.0513884  max resid 0.7489882 
+## Run 9 stress 0.07598649 
+## ... Procrustes: rmse 0.03158926  max resid 0.4853896 
+## Run 10 stress 0.07602768 
+## ... Procrustes: rmse 0.03870527  max resid 0.5384029 
+## Run 11 stress 0.07591841 
+## ... Procrustes: rmse 0.01184095  max resid 0.1846385 
+## Run 12 stress 0.07593733 
+## ... Procrustes: rmse 0.01739491  max resid 0.2279138 
+## Run 13 stress 0.07601356 
+## ... Procrustes: rmse 0.03597959  max resid 0.5887564 
+## Run 14 stress 0.07591934 
+## ... Procrustes: rmse 0.01211018  max resid 0.1861151 
+## Run 15 stress 0.07608396 
+## ... Procrustes: rmse 0.05122759  max resid 0.8232421 
+## Run 16 stress 0.07609441 
+## ... Procrustes: rmse 0.05144834  max resid 0.7312974 
+## Run 17 stress 0.0759134 
+## ... Procrustes: rmse 0.006503173  max resid 0.08720498 
+## Run 18 stress 0.07592924 
+## ... Procrustes: rmse 0.009234749  max resid 0.1249778 
+## Run 19 stress 0.07596777 
+## ... Procrustes: rmse 0.02732248  max resid 0.4088672 
+## Run 20 stress 0.07604538 
+## ... Procrustes: rmse 0.04279135  max resid 0.5880995 
 ## *** Best solution was not repeated -- monoMDS stopping criteria:
-##     11: stress ratio &gt; sratmax
-##      9: scale factor of the gradient &lt; sfgrmin</code></pre>
+##     16: stress ratio &gt; sratmax
+##      4: scale factor of the gradient &lt; sfgrmin</code></pre>
 <pre class="r"><code>data.scores &lt;- as.data.frame(scores(vare.mds)) # Using the scores function from vegan to extract the site scores and convert to a data.frame
 data.scores$sample &lt;- rownames(data.scores) # create a column of site names, from the rownames of data.scores
 # Add metadata

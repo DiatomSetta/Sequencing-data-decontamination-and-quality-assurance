@@ -26,7 +26,6 @@ Produce Part I filtered output file
  * Step 6: Extreme low sample depth pass (# reads < number dependent on platform)
  * Step 7: Extreme low diversity pass (remove sample with one ASV > 99.9% of the sample).
  * Step 8: Dissimilarity between PCR (biological) replicates [Sample Filtering]
- * Step 9: Make sure output is in faire standards
 
 Produce Part III filtered output file
 
