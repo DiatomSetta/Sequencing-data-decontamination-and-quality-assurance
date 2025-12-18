@@ -9,4 +9,4 @@ Main processing steps include:
 
 # Workflow of steps
 
-![alt text](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/Sequencing-data-decontamination-and-quality-assurance.jpg)
+![Sequencing data decontamination and quality assurance workflow](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/blob/main/Sequencing-data-decontamination-and-quality-assurance.jpg)
