@@ -996,12 +996,11 @@ names(reads.per.sample) &lt;- all.reps %&gt;%
   pull(sample)</code></pre>
 <div id="visualize-read-counts-across-samples-before-step-14-filtering" class="section level4">
 <h4>Visualize Read Counts Across Samples before Step 14 filtering:</h4>
-<pre class="r"><code>plot_step13 &lt;- all.reps %&gt;%
-  ggplot(., aes(x = sample, y = tot_step14)) +
-  geom_point() +
-  geom_hline(yintercept = 10000, color=&quot;red&quot;) +
-  ggtitle(&quot;Read Count Across Samples&quot;) +
-  theme(axis.text.x = element_text(angle = 90))
+<pre class="r"><code>plot_step13 &lt;- ggplot(all.reps, aes(x = tot_step14)) +
+  geom_histogram(binwidth=1000, fill=&quot;darkgrey&quot;, color=&quot;black&quot;) +
+  geom_vline(xintercept = 10000, color=&quot;red&quot;) +
+  geom_vline(xintercept = 8000, color=&quot;red&quot;, linetype = &quot;dashed&quot;) +
+  theme_bw()
 
 ggsave(
   plot = plot_step13,

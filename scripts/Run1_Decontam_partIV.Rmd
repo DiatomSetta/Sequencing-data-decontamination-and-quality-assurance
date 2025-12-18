@@ -571,12 +571,11 @@ names(reads.per.sample) <- all.reps %>%
 #### Visualize Read Counts Across Samples before Step 14 filtering:
 
 ```{r warning=FALSE, message=FALSE}
-plot_step13 <- all.reps %>%
-  ggplot(., aes(x = sample, y = tot_step14)) +
-  geom_point() +
-  geom_hline(yintercept = 10000, color="red") +
-  ggtitle("Read Count Across Samples") +
-  theme(axis.text.x = element_text(angle = 90))
+plot_step13 <- ggplot(all.reps, aes(x = tot_step14)) +
+  geom_histogram(binwidth=1000, fill="darkgrey", color="black") +
+  geom_vline(xintercept = 10000, color="red") +
+  geom_vline(xintercept = 8000, color="red", linetype = "dashed") +
+  theme_bw()
 
 ggsave(
   plot = plot_step13,
