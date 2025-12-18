@@ -11,7 +11,7 @@
 
 <meta name="author" content="Sam Setta" />
 
-<meta name="date" content="2025-12-17" />
+<meta name="date" content="2025-12-18" />
 
 <title>Run1 OME Taxonomy Comparison Decontamination PartIV</title>
 
@@ -353,7 +353,7 @@ display: none;
 <h1 class="title toc-ignore">Run1 OME Taxonomy Comparison
 Decontamination PartIV</h1>
 <h4 class="author">Sam Setta</h4>
-<h4 class="date">2025-12-17</h4>
+<h4 class="date">2025-12-18</h4>
 
 </div>
 
@@ -994,6 +994,24 @@ reads.per.sample &lt;- all.reps %&gt;%
 names(reads.per.sample) &lt;- all.reps %&gt;%
   filter(., tot_step14 &gt; 100) %&gt;%
   pull(sample)</code></pre>
+<div id="visualize-read-counts-across-samples-before-step-14-filtering" class="section level4">
+<h4>Visualize Read Counts Across Samples before Step 14 filtering:</h4>
+<pre class="r"><code>plot_step13 &lt;- all.reps %&gt;%
+  ggplot(., aes(x = sample, y = tot_step14)) +
+  geom_point() +
+  geom_hline(yintercept = 10000, color=&quot;red&quot;) +
+  ggtitle(&quot;Read Count Across Samples&quot;) +
+  theme(axis.text.x = element_text(angle = 90))
+
+ggsave(
+  plot = plot_step13,
+  here(config_file$output_path,&quot;Output_plots&quot;,&quot;step13_Sample_Read_Depth.png&quot;),
+  device = &quot;png&quot;,
+  width = 12,
+  height = 8,
+  units = &quot;in&quot;
+)</code></pre>
+</div>
 </div>
 <div id="normal-distribution-of-reads" class="section level3">
 <h3>Normal distribution of reads:</h3>

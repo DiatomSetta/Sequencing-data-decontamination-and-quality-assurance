@@ -568,6 +568,27 @@ names(reads.per.sample) <- all.reps %>%
   pull(sample)
 ```
 
+#### Visualize Read Counts Across Samples before Step 14 filtering:
+
+```{r warning=FALSE, message=FALSE}
+plot_step13 <- all.reps %>%
+  ggplot(., aes(x = sample, y = tot_step14)) +
+  geom_point() +
+  geom_hline(yintercept = 10000, color="red") +
+  ggtitle("Read Count Across Samples") +
+  theme(axis.text.x = element_text(angle = 90))
+
+ggsave(
+  plot = plot_step13,
+  here(config_file$output_path,"Output_plots","step13_Sample_Read_Depth.png"),
+  device = "png",
+  width = 12,
+  height = 8,
+  units = "in"
+)
+
+```
+
 ### Normal distribution of reads:
 
 ```{r warning=FALSE, message=FALSE}
