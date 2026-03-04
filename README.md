@@ -3,11 +3,11 @@ Quality assurance and decontamination of sequencing data from raw asv tables to 
 
 *Note: These scripts are still under development by the Ocean Molecular Ecology (OME) Group*
 
-# To run decontam and QA/QC on sequencing data:
+## To run decontam and QA/QC on sequencing data:
 1) Edit the config files (.yaml) with file locations and filtering thresholds to run each R script.
 2) Run the decontamination and quality assurance scripts in order (partI-IV), editing filtering thresholds in the config files as needed.
 
-# Workflow of steps
+## Workflow of steps
 
 Main processing steps include:
  * Part I) Filter out known contaminants and those found in negative and positive controls.
