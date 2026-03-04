@@ -96,7 +96,7 @@ library("NatParksPalettes")
 # library("zetadiv")
 here()
 
-source(here("Taxonomy_scripts","decontamination_utilities.R"))
+source(here("SKQ_Alaska_Analysis","SKQ_Alaska_scripts","decontamination","decontamination_utilities.R"))
 
 ```
 
@@ -108,7 +108,7 @@ source(here("Taxonomy_scripts","decontamination_utilities.R"))
 # load config file of variables for script
 option_list <- list(
   make_option(c("-c", "--config"), type="character",
-              default="decontam_post-merge_12S.yaml",
+              default="decontam_post-merge_18Sv4.yaml",
               help="Path to configuration file [default %default]", metavar="FILE")
 )
 
@@ -126,13 +126,15 @@ config_file <- read.config(opt$config)
 ```{r warning=FALSE, message=FALSE}
 # Load summary ASV file:
 ASV.summary<- readRDS(here(
-      config_file$project_dir,"decontamination",
-      config_file$region,"Output_R","ASV.summary_final_partIII.RDS"))
+        config_file$parent_dir,
+        config_file$output_path,
+        "Output_R","ASV.summary_final_partIII.RDS"))
 
 # Load nested ASV file:
 ASV.nested <- readRDS(here(
-      config_file$project_dir,"decontamination",
-      config_file$region,"Output_R","ASV.nested_final_partIII.RDS"))
+        config_file$parent_dir,
+        config_file$output_path,
+        "Output_R","ASV.nested_final_partIII.RDS"))
 
 ```
 
@@ -146,7 +148,7 @@ ASV.nested <- ASV.nested %>%
   mutate(Step9.singletons_removed = purrr::map(Step.8.rep_outliers_removed, function(.x) { 
     .x %>%
         ungroup() %>%
-        dplyr::group_by(hash_md5) %>% # group by hash (merged across projects)
+        dplyr::group_by(seq_id) %>% # group by hash (merged across projects)
         mutate(TotalReadsperASV = sum(reads)) %>% # sum reads per ASV
         filter(., TotalReadsperASV > 1) %>% # apply singletons cutoff (of 1 read per ASV)
         ungroup() %>%
@@ -178,7 +180,7 @@ asv_step8_summary <- as.data.frame(ASV.summary$Summary) %>%
   pivot_wider(names_from = "Stat", values_from = "number") %>% 
   filter(Stage=="Step_8.Rep.outliers_removed")
 
-# difference in ASVs (hash_md5's):
+# difference in ASVs (seq_id's):
 paste0(round(asv_step9_summary$nHashes[[1]] / asv_step8_summary$nHashes[[1]] * 100, 2), "% ASVs retained")
 # difference in total reads:
 paste0(round(asv_step9_summary$nReads[[1]] / asv_step8_summary$nReads[[1]]* 100, 2), "% reads retained")
@@ -195,12 +197,12 @@ step_10_occurrences_reads <- ASV.nested %>%
   dplyr::select(Step9.singletons_removed) %>%
   unnest(Step9.singletons_removed) %>% # This stage is a long table
   ungroup() %>%
-  dplyr::select("hash_md5","sample","reads") %>% # select only ASV (hash_md5), sample, and reads
-  group_by(hash_md5) %>%
-  mutate(occurrences_perASV=count(reads > 0), # add occurence column by the number of times the hash_md5 is not 0.
+  dplyr::select("seq_id","sample","reads") %>% # select only ASV (seq_id), sample, and reads
+  group_by(seq_id) %>%
+  mutate(occurrences_perASV=count(reads > 0), # add occurence column by the number of times the seq_id is not 0.
          K = n_distinct(sample, na.rm=TRUE)) %>% # number of samples
-  group_by(hash_md5,occurrences_perASV,K) %>% # add variables that don't change with hash_md5 that need to be in final output
-  summarise(tot_reads=sum(reads)) %>% unique() # claculate the total reads per hash_md5 (ASV)
+  group_by(seq_id,occurrences_perASV,K) %>% # add variables that don't change with seq_id that need to be in final output
+  summarise(tot_reads=sum(reads)) %>% unique() # claculate the total reads per seq_id (ASV)
 ```
 
 Plot histogram of occurrences
@@ -217,7 +219,9 @@ plot_1_histogram <- step_10_occurrences_reads %>%
 # save plot
 ggsave(
   plot = plot_1_histogram,
-  here(config_file$output_path,"Output_plots",
+  here(config_file$parent_dir,
+        config_file$output_path,
+        "Output_plots",
        "step10_Histogram_of_occurrences.png"),
   device = "png",
   width = 12,
@@ -243,7 +247,8 @@ plot_2_reads_vs_occ <- step_10_occurrences_reads %>%
 
 ggsave(
   plot = plot_2_reads_vs_occ,
- here(config_file$output_path,"Output_plots",
+ here(config_file$parent_dir,
+        config_file$output_path,"Output_plots",
        "step10_nReads_versus_Occurrences_across_all_samples.png"),
   device = "png",
   width = 12,
@@ -283,7 +288,7 @@ step_10_counts_reads <- step_10_occurrences_reads_classified %>%
   dplyr::select(-total) %>% left_join(step_10_reads)
 
 # save output as csv:
-write_csv(step_10_counts_reads, file = here(config_file$output_path,"Output_csv","step10.PresOfOcc_summary.csv"))
+write_csv(step_10_counts_reads, file = here(config_file$parent_dir,config_file$output_path,"Output_csv","step10.PresOfOcc_summary.csv"))
 ```
 
 Add filtering threshold and save to nested and summary files
@@ -326,7 +331,7 @@ if (config_file$step11_filt_option=="n-ton") {
       dplyr::select(Step10.tibble.occurrence) %>%
       unnest(Step10.tibble.occurrence) %>% # This stage is a long table
       ungroup() %>% 
-      group_by(hash_md5) %>% # group by hash (merged across projects)
+      group_by(seq_id) %>% # group by hash (merged across projects)
       mutate(TotalReadsperASV = sum(reads)) %>% # sum reads per ASV
             mutate(threshold_nton_filt=case_when( # add levels to n-ton filtering
               TotalReadsperASV > 1 &  TotalReadsperASV < 10 ~ "2",
@@ -347,7 +352,7 @@ if (config_file$step11_filt_option=="n-ton") {
     # and number of ASVs that would be removed with each filtering threshold to number of reads removed:
     step_11_counts_reads <- step_11_nton_filt %>%
       ungroup() %>%
-      dplyr::select(threshold_nton_filt, hash_md5) %>% unique() %>%
+      dplyr::select(threshold_nton_filt, seq_id) %>% unique() %>%
       dplyr::count(threshold_nton_filt) %>%
       mutate(., total = sum(n)) %>%
       mutate(per_ASVs = paste0(round(100 * n / total, 2), "%")) %>%
@@ -355,7 +360,7 @@ if (config_file$step11_filt_option=="n-ton") {
     
     # save output as csv:
     write_csv(step_11_counts_reads, file =
-                here(config_file$output_path,"Output_csv","step11.nton_summary.csv"))
+                here(config_file$parent_dir,config_file$output_path,"Output_csv","step11.nton_summary.csv"))
 } else {
   message("Skip - Step 11: ASV n-ton filtering")
 }
@@ -372,10 +377,10 @@ if (config_file$step11_filt_option=="perc_reads") {
       dplyr::select(Step10.tibble.occurrence) %>%
       unnest(Step10.tibble.occurrence) %>% # This stage is a long table
       ungroup() %>% 
-      dplyr::select(hash_md5, sample, reads) %>%
+      dplyr::select(seq_id, sample, reads) %>%
       unique() %>%
       # pivot_wider(names_from = sample, values_from = reads) %>%
-      group_by(hash_md5) %>% 
+      group_by(seq_id) %>% 
       summarise(TotalReadsperASV=sum(reads)) %>%
       mutate(Total_reads=sum(TotalReadsperASV),
              perc_total=TotalReadsperASV/Total_reads) %>%
@@ -383,7 +388,7 @@ if (config_file$step11_filt_option=="perc_reads") {
       
     # save output as csv:
     write_csv(step_11_percTot_filt, file =
-                here(config_file$output_path,"Output_csv","step11.ASV.perc_summary.csv"))
+                here(config_file$parent_dir,config_file$output_path,"Output_csv","step11.ASV.perc_summary.csv"))
 } else {
   message("Skip - Step 11: ASV % total reads filtering")
 }
@@ -408,9 +413,7 @@ if (config_file$step11_filt_option=="n-ton") {
   ASV.nested <- ASV.nested %>%
     mutate(Step11.ASV.filt = purrr::map(Step10.tibble.occurrence, function(.x) {
       .x %>%
-        # FIX THE FOLLOWING LINE!
         left_join(step_11_percTot_filt %>% dplyr::select(-c("TotalReadsperASV","Total_reads"))) %>%
-        # FIX THE FOLLOWING LINE!
         filter(., perc_total >= eval(parse(text=print(config_file$step11_perc_reads, quote=F))))
     }))
   
@@ -444,14 +447,14 @@ Filter samples by low complexity user defined value, default it 1 in config_file
 asv_prop <- ASV.nested %>%
     dplyr::select(Step11.ASV.filt) %>% # pos contaminants removed tibble
     unnest(Step11.ASV.filt) %>% # unnest tibble to work with
-    dplyr::select(hash_md5, reads, sample) %>% # select only necessary columns
+    dplyr::select(seq_id, reads, sample) %>% # select only necessary columns
     pivot_wider( # pivot wider so read counts are now below each sample name
       names_from = sample,
       values_from = reads,
       values_fill = list(reads = 0)
     ) %>% 
   # calculate the porportion each ASV makes of the the total reads per sample
-  mutate(across(-c("hash_md5"), ~ .x/sum(.x))) %>%
+  mutate(across(-c("seq_id"), ~ .x/sum(.x))) %>%
   pivot_longer(cols = starts_with("E"),
                names_to = "sample",
                values_to = "prop_reads") %>% 
@@ -485,7 +488,8 @@ ASV.summary$Summary[[1]]
 ### Filter by Taxonomic Paths
 # This list can be expanded upon additional work to identify known contaminants within OME PMEL samples
 if (file.exists(config_file$step13_unknown_characters_to_remove_path)) {
-  step13_species_to_remove <- read.csv(here(config_file$step13_unknown_characters_to_remove_path))$Domain
+  step13_species_to_remove <- read.csv(here(config_file$parent_dir,
+                                            config_file$step13_unknown_characters_to_remove_path))$Domain
   
 } else {
   step13_species_to_remove <- c("Unknown","unknown","unclassified","Unclassified","Environmental Unknown","Unassigned","NA")
@@ -494,14 +498,14 @@ if (file.exists(config_file$step13_unknown_characters_to_remove_path)) {
 
 ```
 
-If step13_remove=TRUE in config file, remove hash_md5 with unknown Domains, if not keep everything.
+If step13_remove=TRUE in config file, remove seq_id with unknown Domains, if not keep everything.
 
 ```{r warning=FALSE, message=FALSE}
-## Identify ASVs (hash_md5) that have unknown Domains
+## Identify ASVs (seq_id) that have unknown Domains
 step13_species_to_remove <- ASV.nested %>%
     dplyr::select(step.12_low_div_pass) %>% # pos contaminants removed tibble
     unnest(step.12_low_div_pass) %>% # unnest tibble to work with
-    dplyr::select(hash_md5, sum.taxonomy, sample) %>% # select only necessary columns
+    dplyr::select(seq_id, sum.taxonomy, sample) %>% # select only necessary columns
   separate_wider_delim( # Separate out sample id to get cruise id
     sum.taxonomy,
     delim = ";",
@@ -518,7 +522,7 @@ if (config_file$step13_remove==TRUE) {
   ASV.nested <- ASV.nested %>% 
     mutate(step.13_unknown_removed =
              purrr::map(step.12_low_div_pass,
-                        ~ filter(., !hash_md5 %in% step13_species_to_remove$hash_md5))
+                        ~ filter(., !seq_id %in% step13_species_to_remove$seq_id))
   )
 
   } else { # If there isn't a positive control output message
@@ -579,7 +583,7 @@ plot_step13 <- ggplot(all.reps, aes(x = tot_step14)) +
 
 ggsave(
   plot = plot_step13,
-  here(config_file$output_path,"Output_plots","step13_Sample_Read_Depth.png"),
+  here(config_file$parent_dir,config_file$output_path,"Output_plots","step13_Sample_Read_Depth.png"),
   device = "png",
   width = 12,
   height = 8,
@@ -663,8 +667,12 @@ ASV.summary$Summary[[1]]
 
 ```{r warning=FALSE, message=FALSE}
 # Save summary and nested data
-saveRDS(ASV.nested, file = here(config_file$output_path,"Output_R","ASV.nested_final_partIV.RDS"))
-saveRDS(ASV.summary, file = here(config_file$output_path,"Output_R","ASV.summary_final_partIV.RDS"))
+saveRDS(ASV.nested, file = here(config_file$parent_dir,
+                                config_file$output_path,
+                                "Output_R","ASV.nested_final_partIV.RDS"))
+saveRDS(ASV.summary, file = here(config_file$parent_dir,
+                                 config_file$output_path,
+                                 "Output_R","ASV.summary_final_partIV.RDS"))
 
 ```
 
@@ -678,7 +686,9 @@ decontam_final_output<-ASV.nested %>%
   dplyr::select(Miseq_region, step.14_low_depth_pass) %>%
   unnest(step.14_low_depth_pass)
 # save dataframe as csv:
-write_csv(decontam_final_output, here(here(config_file$output_path,"Output_csv","Decontam_final_output.csv")))
+write_csv(decontam_final_output, here(here(config_file$parent_dir,
+                                           config_file$output_path,
+                                           "Output_csv","Decontam_final_output.csv")))
 ```
 
 ### Save final data as asv, taxonomy and metadata files
@@ -689,7 +699,7 @@ write_csv(decontam_final_output, here(here(config_file$output_path,"Output_csv",
 
 ```{r warning=FALSE, message=FALSE}
 # ASV table:
-partIV_ASV_final_output <- decontam_final_output %>% dplyr::select("hash_md5","sample","reads") %>%
+partIV_ASV_final_output <- decontam_final_output %>% dplyr::select("seq_id","sample","reads") %>%
   pivot_wider( # pivot wider so read counts are now below each sample name
       names_from = sample,
       values_from = reads,
@@ -697,18 +707,27 @@ partIV_ASV_final_output <- decontam_final_output %>% dplyr::select("hash_md5","s
     )
 
 ## metadata file:
-partIV_meta_final_output <- read_csv(here(config_file$output_path,"Output_csv","meta_final_partIII.csv")) %>% filter(sample %in% decontam_final_output$sample)
+partIV_meta_final_output <- read_csv(here(config_file$parent_dir,
+                                          config_file$output_path,
+                                          "Output_csv","meta_final_partIII.csv")) %>% 
+  filter(sample %in% decontam_final_output$sample)
 
 # taxonomy file:
-partIV_taxa_final_output<-decontam_final_output %>% dplyr::select("hash_md5","sum.taxonomy")
+partIV_taxa_final_output<-decontam_final_output %>% dplyr::select("seq_id","sum.taxonomy")
 
 ## save outputs
 # save asv tables
-write_csv(partIV_ASV_final_output, file = here(config_file$output_path,"Output_csv","Decontam_final_asv_table.csv"))
+write_csv(partIV_ASV_final_output, file = here(config_file$parent_dir,
+                                               config_file$output_path,
+                                               "Output_csv","Decontam_final_asv_table.csv"))
 # save taxonomy table
-write_csv(partIV_taxa_final_output, file = here(config_file$output_path,"Output_csv","Decontam_final_taxonomy_table.csv"))
+write_csv(partIV_taxa_final_output, file = here(config_file$parent_dir,
+                                                config_file$output_path,
+                                                "Output_csv","Decontam_final_taxonomy_table.csv"))
 # save metadata file
-write_csv(partIV_meta_final_output, file = here(config_file$output_path,"Output_csv","Decontam_final_metadata.csv"))
+write_csv(partIV_meta_final_output, file = here(config_file$parent_dir,
+                                                config_file$output_path,
+                                                "Output_csv","Decontam_final_metadata.csv"))
 
 ```
 
