@@ -1,0 +1,6 @@
+samp_name,assay_name,pcr_plate_id,lib_id,seq_run_id,lib_conc,lib_conc_unit,lib_conc_meth,phix_perc,mid_forward,mid_reverse,filename,filename2,checksum_filename,checksum_filename2,associatedSequences,input_read_count,output_read_count,output_otu_num,otu_num_tax_assigned
+sample1,ssu18sv4_stoeck,P1,,,0.8,nM,Qubit Fluorometer,35,ATGGCGCCTG,TCCACGGCCT,,,,,,200000,188890,900,350
+sample2,ssu18sv4_stoeck,P1,,,0.8,nM,Qubit Fluorometer,35,ATGGCGCCTG,TCCACGGCCT,,,,,,500000,497660,950,250
+sample3,ssu18sv4_stoeck,P1,,,0.8,nM,Qubit Fluorometer,35,ATGGCGCCTG,TCCACGGCCT,,,,,,100000,94400,1000,400
+sample4,ssu18sv4_stoeck,P1,,,0.8,nM,Qubit Fluorometer,35,ATGGCGCCTG,TCCACGGCCT,,,,,,200000,199850,5000,450
+sample5,ssu18sv4_stoeck,P1,,,0.8,nM,Qubit Fluorometer,35,ATGGCGCCTG,TCCACGGCCT,,,,,,300000,296600,3000,600
