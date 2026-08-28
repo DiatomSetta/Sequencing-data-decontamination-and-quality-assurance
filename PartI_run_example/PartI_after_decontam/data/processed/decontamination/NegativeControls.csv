@@ -1,0 +1,2 @@
+samp_name,associated_run,sequenced,region_tested,region_amplified,pool_single,date_of_collection_utc,date_of_extraction,field_or_extraction_blank,associated_field_sample,associated_extract_sample,pool_samp_source,note
+sample6.NC,run1,TRUE,"MiFish,18Sv4,18SMachida,COI,Parada16S,ITS1",18Sv4,single,NA,NA,extraction,"sample1.1B,sample1.2B,sample1.3B,sample2,sample3",NA,NA,NA

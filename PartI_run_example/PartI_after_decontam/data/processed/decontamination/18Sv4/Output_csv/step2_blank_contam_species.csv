@@ -1,0 +1,3 @@
+neg_cont_type,seq_id,tot,Domain,Phylum,Class,Order,Family,Genus,Species,Taxon
+field negative,767143ab9acc72eb9ea4e88cc509485d,1200,Eukaryota,Cnidaria,Hydrozoa,Leptothecata,Clytiidae,Clytia,Clytia gracilis,Eukaryota;Cnidaria;Hydrozoa;Leptothecata;Clytiidae;Clytia;Clytia gracilis
+field negative,05cde226a74ec07138cda2d9b03594fe,10,Eukaryota,Dinophyceae__p,Dinophyceae,NA,NA,NA,NA,Eukaryota;Dinophyceae__p;Dinophyceae;NA;NA;NA;NA

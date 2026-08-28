@@ -1,0 +1,13 @@
+ASV	Kingdom	Phylum	Class	Order	Family	Genus	Species
+ASV_1	Eukaryota	Ciliophora	Phyllopharyngea	Exogenida	Ephelotidae	Ephelota	Ephelota plana
+ASV_2	Eukaryota	Dinophyceae__p	Dinophyceae	NA	NA	NA	NA
+ASV_3	Eukaryota	Dinophyceae__p	Dinophyceae	NA	NA	NA	NA
+ASV_4	Eukaryota	Dinophyceae__p	Dinophyceae	NA	NA	NA	NA
+ASV_5	Eukaryota	Ciliophora	Spirotrichea	NA	NA	NA	NA
+ASV_6	Eukaryota	Dinophyceae__p	Dinophyceae	Peridiniales	Heterocapsaceae	Heterocapsa	Heterocapsa rotundata
+ASV_7	Eukaryota	Dinophyceae__p	Dinophyceae	NA	NA	NA	NA
+ASV_8	Eukaryota	Dinophyceae__p	Dinophyceae	Syndiniales	NA	NA	NA
+ASV_9	Eukaryota	Dinophyceae__p	Dinophyceae	Gymnodiniales	NA	NA	NA
+ASV_10	Eukaryota	Dinophyceae__p	Dinophyceae	Gymnodiniales	Gymnodiniaceae	NA	NA
+ASV_11	Eukaryota	Cnidaria	Hydrozoa	Leptothecata	Clytiidae	Clytia	Clytia gracilis
+ASV_12	Eukaryota	Bacillariophyta	Bacillariophyceae	Naviculales	Diadesmidaceae	Luticola	Luticola ventricosa
