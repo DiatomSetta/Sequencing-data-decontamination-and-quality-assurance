@@ -26,7 +26,6 @@ PartI_run_inputs/
             └── Join_faire_metadata.R
             └── download_neg_con_metadata.R
             └── combo_nc_assoc_multiple_runs.sh
-
 ```
 
 **Part II-IV input files and directory**
@@ -47,6 +46,4 @@ PartII_IV_project_inputs/
             └── Decontam_partII.Rmd*
             └── Decontam_partIII.Rmd*
             └── Decontam_partIV.Rmd*
-
-
 ```
