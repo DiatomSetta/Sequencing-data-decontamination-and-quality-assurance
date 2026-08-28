@@ -1,0 +1,71 @@
+---
+title: "run example Decontam and QAQC"
+author: "Sam Setta"
+date: "`Sys.Date()`"
+
+# Part I
+# metabarcoding region:
+# options of region for OME: Parada16S, Kelly16S, 18Sv4, 18Sv9, Machida18S, COI, MiFish, ITS1, dLoop, MiDeca
+region: "18Sv4"
+# sequencing run:
+run: "run_example"
+
+# Input file paths for REVAMP Formatted ASV data, fasta sequences, and taxonomy.
+input_ASV_path: "data/raw/run_example_18Sv4_counts.tsv"
+input_fasta_path: "data/raw/run_example_18Sv4_ASVs.fa"
+input_taxonomy_path: "data/raw/run_example_18Sv4_taxonomy.txt"
+taxonomy_format: "seven_level" # options either nine_level or seven_level
+# note: need to make sure column headers in readTrimSummary file are correct before loading into R. (sample column likely needs header)
+
+# Path to the metadata file. Please see detailed instructions on formatting and required columns in R script
+# For OME faire metadata, run Join_faire_metadata first to produce Metadata_faire.csv from experiment and sample files
+input_meta_path: "data/processed/decontamination/Metadata_faire.csv"
+
+# Path to the output path file. Please see detailed instructions on formatting and required columns
+output_path: "data/processed/decontamination"
+
+# Part I processing steps
+
+# Step 2: Taxonomic path for known positive control species.
+# Full taxonomic string of known positive control species. May need to adjust if the classifier can not resolve species level.
+step2_positive_species_taxonomic_path: "Eukaryota;Bacillariophyta;Bacillariophyceae;Naviculales;Diadesmidaceae;Luticola;Luticola ventricosa"
+step2_positive_lowest_taxonomic_lvl: "Species"
+step2_positive_lowest_taxonomic_lvl_id: "Luticola ventricosa"
+# path for OME 18Sv4 positive controls
+# OME_18Sv4_pos: "OME_18Sv4_POSITIVES/data/processed/OME_18Sv4_vector_contam.csv"
+
+# low read depth for negative control flags:
+step2_low_read_depth: 1000
+step2_high_read_depth: 5000
+
+# Step 3: Negative control filtering: "microdecontam","proportion","occurrence","none"
+# NOTE: for run1 did not filter negative control because only 5 reads
+# NOTE: nc is also from another sequencing run (2) and doing so would've filtered out a lot of samples, sequences, and asvs
+step3_nc_filt: "microdecontam"
+# Step 3: Google url with associated negative control samples for each sample: (if you don't want to do this step, relace with NULL)
+step3_assoc_nc: "data/processed/decontamination/NegativeControls.csv"
+# Step 3: Column to identify samples associated with each negative control. Comment out if not using associated controls.
+# options: all_associated_samples, associated_field_sample, associated_extraction_sample
+step3_assoc_nc_field: "all_associated_samples"
+# Step 3: If negative controls were sequenced in separate run, point to where the file with reads and negative control samples can be found:
+step3_nc_across_runs: "data/processed/decontamination/nc_associated_multiple_runs.txt"
+# Step 3: Parameters for microDecon (number of runs, thresholds, regression).
+step3_runs: 2 # ideal number of runs is 2 unless you expect more contamination
+# The thresh term used in step 3 for microDecon. See microDecon for detailed instructions. https://github.com/donaldtmcknight/microDecon
+step3_thresh: 0.7 # The proportion of samples for which a give ASV is zero, default is 0.7. If 70% of ASVs in a group of samples is zero the remaining samples in the group will be set to zero
+# The prop.thresh term used in step 3 for microDecon. See microDecon for detailed instructions. https://github.com/donaldtmcknight/microDecon
+step3_prop_thresh: 5e-05 # 0.00005 is the default, if proportion of reads for an ASV in a group of samples is less than 0.005% the ASV for that group will be set to zero.
+# The regression term used in step 3 for microDecon. See microDecon for detailed instructions. https://github.com/donaldtmcknight/microDecon
+step3_regression: 0 # 0 is default based on simulations, 1 is more simplistic and consistent and is a good alternative too.
+# Lower threshold for switching from regression 1 to regression 2, if < lower threshold switches to regression 2. Default is 40, best not to change.
+step3_low_thresh: 40
+# Higher threshold for switching from regression 1 to regression 2, if > higher threshold switches to regression 2. Default is 400, best not to change.
+step3_high_thresh: 400
+
+# Step 5: Path to a file listing species to remove as known lab contaminants.
+# Set to null if using hard-coded list within the script. Otherwise provide a CSV file with a column titled "sum.taxonomy" that includes all relevant strings.
+step5_species_to_remove_path: "data/processed/decontamination/Known_contaminants.csv"
+# Do you want to filter by sequence length? ("Yes" or "No")
+seq_length_filt: "No"
+# If filt by sequence length what is the length above which you want to filter out sequences
+seq_length_max: "NA"
