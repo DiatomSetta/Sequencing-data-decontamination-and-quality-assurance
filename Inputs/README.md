@@ -1,6 +1,6 @@
 ## What you will find here
 
-This directory contains all input scripts needed to run decontamination on sequencing data (indicated with an asterisk). There are also example files for sequencing data included in the data directory (indicated with an asterisk). Additional scripts included are specific to OME group and don't include asterisks, including `Join_faire_metadata.R`,`download_neg_con_metadata.R`, and `combo_nc_assoc_multiple_runs.sh`.
+This directory contains all input scripts needed to run decontamination on sequencing data (indicated with an asterisk). There are also example files for sequencing data included in the data directory (indicated with an asterisk). Additional scripts are specific to OME group (without asterisks), including `Join_faire_metadata.R`,`download_neg_con_metadata.R`, and `combo_nc_assoc_multiple_runs.sh`.
 
 ### Directory structure
 
