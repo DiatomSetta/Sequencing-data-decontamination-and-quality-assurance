@@ -19,20 +19,20 @@ Main processing steps include:
 
   1. Download the [`Inputs/PartI_run_inputs/`](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/tree/2cbd7af136c3e5e66d7ba6f0081c51d0b3b18ef7/Inputs/PartI_run_inputs) folder which includes all the necessary scripts and files (listed below). Scripts specific to the OME group are labeled as such below.
    
-    a. create_dir_structure.R [scripts]
-    b. decontamination_utilities.R [scripts]
-    c. Decontam_partI.Rmd [scripts]
-    d. decontam_pre-merge_region.yaml [scripts]
-    e. Known_contaminants.csv [data]
-    f. Unknown_characters.csv [data]
-    e. Join_faire_metadata.R (OME group) [scripts]
-    f. download_neg_con_metadata.R (OME group) [scripts]
+  * create_dir_structure.R [scripts]
+  * decontamination_utilities.R [scripts]
+  * Decontam_partI.Rmd [scripts]
+  * decontam_pre-merge_region.yaml [scripts]
+  * Known_contaminants.csv [data]
+  * Unknown_characters.csv [data]
+  * Join_faire_metadata.R (OME group) [scripts]
+  * download_neg_con_metadata.R (OME group) [scripts]
   
   *The create_dir_structure.R file will create the directory structure needed for the scripts, but is the same as the PartI_run_inputs directory*
 
-2. Examples of data files are included in `Inputs/PartI_run_inputs/` to test scripts and decontamination pipeline. Files needed for the decontamination pipeline are a metadata file (ex: `processed/decontamination/Metadata_faire.csv`), fasta file (`raw/ASVs.fa`), asv table (`raw/counts.tsv`), and taxonomy table (`taxonomy.txt`).
+1. Examples of data files are included in `Inputs/PartI_run_inputs/` to test scripts and decontamination pipeline. Files needed for the decontamination pipeline are a metadata file (ex: `processed/decontamination/Metadata_faire.csv`), fasta file (`raw/ASVs.fa`), asv table (`raw/counts.tsv`), and taxonomy table (`taxonomy.txt`).
 
-3. OME team members should copy the sequencing files from the `eDNA_Bioinformatics` directory to `data/raw` with symlink (see example below). Need to copy three files for Part I, fasta sequencing file (.fa), asv count table (.tsv), and taxonomy table (can include multiple here but all should be tab-delimited). To create symlink to original file location and save space. Note, you need the absolute directory path to correctly reference the original file.
+2. OME team members should copy the sequencing files from the `eDNA_Bioinformatics` directory to `data/raw` with symlink (see example below). Need to copy three files for Part I, fasta sequencing file (.fa), asv count table (.tsv), and taxonomy table (can include multiple here but all should be tab-delimited). To create symlink to original file location and save space. Note, you need the absolute directory path to correctly reference the original file.
 
 ```
 # For asv table:
@@ -64,3 +64,17 @@ ln -s $eDNA_Bioinformatics/Run1/01_REVAMP/18Sv4/ASV2Taxonomy/18Sv4_asvTaxonomyTa
 8. OME team members should update the `Decontam_notes` tab in the `OME_Decontamination_Progress_Notes` spreadsheet in the `OME_Decontamination` project folder with progress and notes on filtering steps. The html file produced by the R markdown file should also be copied to the `Markdown_decontam_output` folder within the same project directory for others to review as needed.
 
 ### Part II - Merging across sequencing runs
+
+1. Similar to Part I, download the [`Inputs/PartII_IV_project_inputs/`](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/tree/c9ed8597750e86a2c09bc2929b058a02b9cfedae/Inputs/PartII_IV_project_inputs) folder which includes all the necessary scripts and files (listed below). Scripts specific to the OME group are labeled as such below.
+   
+  * create_dir_structure.R [scripts]
+  * decontamination_utilities.R [scripts]
+  * merging_functions.R [scripts]
+  * Decontam_partII.Rmd [scripts]
+  * Decontam_partIII.Rmd [scripts]
+  * Decontam_partIV.Rmd [scripts]
+  * decontam_post-merge_region.yaml [scripts]
+  * Unknown_characters.csv [data]
+  * Join_faire_metadata.R (OME group) [scripts]
+  
+  *The create_dir_structure.R file will create the directory structure needed for the scripts, but is the same as the PartI_run_inputs directory*
