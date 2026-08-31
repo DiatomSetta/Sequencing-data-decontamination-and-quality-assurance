@@ -13,31 +13,54 @@ Main processing steps include:
 
 ![Sequencing data decontamination and quality assurance workflow](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/blob/main/Sequencing-data-decontamination-and-quality-assurance.jpg)
 
-## To run decontam and QA/QC on sequencing data:
-OLD --> 1) Edit the config files (.yaml) with file locations and filtering thresholds to run each R script.
-OLD --> 2) Run the decontamination and quality assurance scripts in order (partI-IV), editing filtering thresholds in the config files as needed.
+## Running decontamination and quality assurance on sequencing data:
 
-<u>Part I - Decontamination by sequencing run</u>
-1) Copy all necessary scripts (listed below) to your directory, in a folder within `scripts/decontamination/`. Scripts specific to the OME group are labeled as such below.
-  a. create_dir_structure.R
-  b. decontamination_utilities.R
-  c. Run1_Decontam_partI.Rmd
-  d. Join_faire_metadata.R (OME group)
-  e. download_neg_con_metadata.R (OME group)
-  f. decontam_pre-merge_region.yaml (edit with region of interest)
+### Part I - Decontamination by sequencing run
 
-2) If using VS code, open folder of parent directory (e.g. OME_Run1).
-
-3) Run create_dir_structure.R script to make sure directory structure for code is set-up.
-
-4) Copy `Known_contaminants.csv` and `Unknown_characters.csv` files for decontamination into the `data/processed/decontamination` directory.
-
-5) Copy sequencing files to `data/raw` either directly or with symlink (OME group). Need at least three files for Part I, fasta sequencing file (.fa), asv count file (.tsv), and taxonomy files (can include multiple here but all should be tab-delimited). To create symlink to original file location and save space, use the code below which will create a symlink to the file (in this case labeled by `Run1_16Sv4_ASVs.fa`. Note, you need the absolute directory path to correctly reference the original file.
-
-```
-ln -s $eDNA_DIR/Run1/01_REVAMP/18Sv4/dada2/ASVs.fa $HOME_DIR/OME_Run1/data/raw/Run1_16Sv4_ASVs.fa
-```
-
-6) Edit the config file depending on the region of interest. Examples used for OME group that differ by region, below:
+  1. Download the [`Inputs/PartI_run_inputs/`](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/tree/2cbd7af136c3e5e66d7ba6f0081c51d0b3b18ef7/Inputs/PartI_run_inputs) folder which includes all the necessary scripts and files (listed below). Scripts specific to the OME group are labeled as such below.
    
-8) afddsafds
+    a. create_dir_structure.R [scripts]
+    b. decontamination_utilities.R [scripts]
+    c. Decontam_partI.Rmd [scripts]
+    d. decontam_pre-merge_region.yaml [scripts]
+    e. Known_contaminants.csv [data]
+    f. Unknown_characters.csv [data]
+    e. Join_faire_metadata.R (OME group) [scripts]
+    f. download_neg_con_metadata.R (OME group) [scripts]
+  
+  *The create_dir_structure.R file will create the directory structure needed for the scripts, but is the same as the PartI_run_inputs directory*
+
+2. Examples of data files are included in `Inputs/PartI_run_inputs/` to test scripts and decontamination pipeline. Files needed for the decontamination pipeline are a metadata file (ex: `processed/decontamination/Metadata_faire.csv`), fasta file (`raw/ASVs.fa`), asv table (`raw/counts.tsv`), and taxonomy table (`taxonomy.txt`).
+
+3. OME team members should copy the sequencing files from the `eDNA_Bioinformatics` directory to `data/raw` with symlink (see example below). Need to copy three files for Part I, fasta sequencing file (.fa), asv count table (.tsv), and taxonomy table (can include multiple here but all should be tab-delimited). To create symlink to original file location and save space. Note, you need the absolute directory path to correctly reference the original file.
+
+```
+# For asv table:
+ln -s $eDNA_Bioinformatics/Run1/01_REVAMP/18Sv4/dada2/ASVs.fa $HOME_DIR/OME_Run1/data/raw/Run1_18Sv4_ASVs.fa
+# For asv table:
+ln -s $eDNA_Bioinformatics/Run1/01_REVAMP/18Sv4/dada2/ASVs_counts.tsv $HOME_DIR/OME_Run1/data/raw/Run1_18Sv4_counts.tsv
+# For taxonomy table from revamp:
+ln -s $eDNA_Bioinformatics/Run1/01_REVAMP/18Sv4/ASV2Taxonomy/18Sv4_asvTaxonomyTable.txt $HOME_DIR/OME_Run1/data/raw/Run1_18Sv4_tax_revamp.txt
+
+```
+  *Note: Replace $eDNA_Bioinformatics with absolute path, and $HOME_DIR with the absolute path to your home directory*
+   
+3. Before running any scripts rename folders and files as apropriate for the sequencing run you are processing (e.g. Run1, Run2, etc.). Then open the parent directory (PartI_run_inputs) in Visual Studio code (VS code), or as an R markdown project.
+   
+4. OME team members should run both the `Join_faire_metadata.R` and `download_neg_con_metadata.R` in the run folder to download the most recent version of the faire metadata spreadsheet and the negative control spreadsheet. URLs for both can be found on the `Steps_for_processing` tab of the `OME_Decontamination_Progress_Notes` spreadsheet in the `OME_Decontamination` project folder. You will need to log into your google account within your coding environment (VS code, R) to access the files.
+
+    *For all others, add negative control data to a file structured similarly to the [NegativeControls.csv](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/blob/2cbd7af136c3e5e66d7ba6f0081c51d0b3b18ef7/Example_decontamination/PartI_run_example/data/processed/decontamination/NegativeControls.csv) file in the in the `Example_decontamination/PartI_run_example/data/processed` folder*
+   
+5. Edit the config file (`decontam_pre-merge_region.yaml`) with the correct paths to each file and region specific filtering information.
+   
+6. Edit the `Decontam_partI.Rmd` file front matter at the top of the file with the naming schema for the run and region of interest. The config file name also needs to be edited in the third code chunk of the file named `load-config` to the config file for the region of interest (e.g for 18Sv4, `decontam_pre-merge_18Sv4.yaml`). Examples used for OME group that differ by region, below:
+
+```
+
+```
+
+7. Knit the R markdown file (`Decontam_partI.Rmd`), which should produce the same output files as the `Example_decontamination/PartI_run_example` folder.
+   
+8. OME team members should update the `Decontam_notes` tab in the `OME_Decontamination_Progress_Notes` spreadsheet in the `OME_Decontamination` project folder with progress and notes on filtering steps. The html file produced by the R markdown file should also be copied to the `Markdown_decontam_output` folder within the same project directory for others to review as needed.
+
+### Part II - Merging across sequencing runs
