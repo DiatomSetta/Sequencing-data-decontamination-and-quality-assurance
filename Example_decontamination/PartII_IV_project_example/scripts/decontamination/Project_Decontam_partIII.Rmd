@@ -63,7 +63,7 @@ Load libraries
 
 ```{r setup, warning=FALSE, message=FALSE}
 # install libraries
-# BiocManager::install(c("tidyverse", "lubridate", "RColorBrewer", "ggsci", "dplyr", "phyloseq", "knitr", "readxl","ggplot2","NatParksPalettes","purrr", "ggvenn", "zetadiv"))
+# BiocManager::install(c("tidyverse", "proxy", "reshape2", "knitr", "vegan", "phyloseq", "DESeq2", "ape","RColorBrewer","ggsci","readxl", "here", "optparse","fitdistrplus","configr","Biostrings","NatParksPalettes","ggforce","ggrepel"))
 
 library("tidyverse")
 library("proxy")
