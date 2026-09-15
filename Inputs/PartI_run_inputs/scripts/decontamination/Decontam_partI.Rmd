@@ -35,7 +35,7 @@ Load libraries
 
 ```{r setup, warning=FALSE, message=FALSE}
 # install libraries
-# BiocManager::install(c("tidyverse", "lubridate", "RColorBrewer", "ggsci", "dplyr", "phyloseq", "knitr", "readxl","ggplot2","NatParksPalettes","purrr", "ggvenn", "zetadiv"))
+# BiocManager::install(c("tidyverse", "proxy", "knitr", "vegan", "phyloseq", "DESeq2", "ape", "RColorBrewer","ggsci","readxl","here", "openssl", "optparse","configr","Biostrings","NatParksPalettes","gt","googlesheets4","powerjoin"))
 
 # devtools::install_github("donaldtmcknight/microDecon")
 
