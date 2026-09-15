@@ -11,7 +11,7 @@
 
 <meta name="author" content="Sam Setta" />
 
-<meta name="date" content="2026-08-28" />
+<meta name="date" content="2026-09-15" />
 
 <title>Project Decontamination PartIV</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Project Decontamination PartIV</h1>
 <h4 class="author">Sam Setta</h4>
-<h4 class="date">2026-08-28</h4>
+<h4 class="date">2026-09-15</h4>
 
 </div>
 
@@ -424,12 +424,11 @@ low occupancy probabilities.</p>
 a certain read number across a certain number of samples.</p>
 <p>Load libraries</p>
 <pre class="r"><code># install libraries
-# BiocManager::install(c(&quot;tidyverse&quot;, &quot;lubridate&quot;, &quot;RColorBrewer&quot;, &quot;ggsci&quot;, &quot;dplyr&quot;, &quot;phyloseq&quot;, &quot;knitr&quot;, &quot;readxl&quot;,&quot;ggplot2&quot;,&quot;NatParksPalettes&quot;,&quot;purrr&quot;, &quot;ggvenn&quot;, &quot;zetadiv&quot;))
+# BiocManager::install(c(&quot;tidyverse&quot;, &quot;proxy&quot;, &quot;reshape2&quot;, &quot;microDecon&quot;, &quot;knitr&quot;, &quot;vegan&quot;, &quot;phyloseq&quot;, &quot;DESeq2&quot;, &quot;ape&quot;,&quot;RColorBrewer&quot;,&quot;ggsci&quot;,&quot;readxl&quot;, &quot;here&quot;, &quot;optparse&quot;,&quot;fitdistrplus&quot;,&quot;configr&quot;,&quot;Biostrings&quot;,&quot;NatParksPalettes&quot;))
 
 library(&quot;tidyverse&quot;)
 library(&quot;proxy&quot;)
 library(&quot;reshape2&quot;)
-library(&quot;microDecon&quot;)
 library(&quot;knitr&quot;)
 library(&quot;vegan&quot;)
 library(&quot;phyloseq&quot;)
@@ -437,7 +436,6 @@ library(&quot;DESeq2&quot;)
 library(&quot;ape&quot;)
 library(&quot;RColorBrewer&quot;)
 library(&quot;ggsci&quot;)
-library(&quot;knitr&quot;)
 library(&quot;readxl&quot;)
 library(&quot;here&quot;)
 library(&quot;optparse&quot;)
@@ -863,7 +861,7 @@ asv_prop &lt;- ASV_nested %&gt;%
     ) %&gt;% 
   # calculate the porportion each ASV makes of the the total reads per sample
   mutate(across(-c(&quot;seq_id&quot;), ~ .x/sum(.x))) %&gt;%
-  pivot_longer(cols = starts_with(config_file$sample_starts_with),
+  pivot_longer(cols = starts_with(&quot;sample&quot;),
                names_to = &quot;sample&quot;,
                values_to = &quot;prop_reads&quot;) %&gt;% 
   filter(prop_reads &gt; config_file$step12_prop) # identify samples that have ASVs that make up greater than 99% of reads.
@@ -1279,9 +1277,8 @@ saveRDS(ASV_summary, file = here(config_file$output_path,
 <div id="save-final-output-file-of-all-data" class="section level3">
 <h3>Save final output file of all data:</h3>
 <pre class="r"><code># final filtered dataframe:
-decontam_final_output&lt;-ASV_nested$step_14_low_depth_pass %&gt;% as.data.frame()
- dplyr::select(step_14_low_depth_pass) %&gt;%
- unnest(step_14_low_depth_pass)
+decontam_final_output &lt;- ASV_nested$step_14_low_depth_pass %&gt;% as.data.frame()
+
 # save dataframe as csv:
 write_csv(decontam_final_output, here(config_file$output_path,
                                             config_file$region,
@@ -1414,18 +1411,17 @@ writeXStringSet(merged_seqs_fasta, file = here(config_file$output_path,
 ## [25] S4Vectors_0.40.2            BiocGenerics_0.48.1        
 ## [27] phyloseq_1.46.0             vegan_2.7-1                
 ## [29] permute_0.9-10              knitr_1.51                 
-## [31] microDecon_1.0.2            reshape2_1.4.4             
-## [33] proxy_0.4-29                lubridate_1.9.4            
-## [35] forcats_1.0.1               stringr_1.6.0              
-## [37] dplyr_1.1.4                 purrr_1.2.2                
-## [39] readr_2.1.5                 tidyr_1.3.1                
-## [41] tibble_3.3.1                ggplot2_4.0.3              
-## [43] tidyverse_2.0.0            
+## [31] reshape2_1.4.4              proxy_0.4-29               
+## [33] lubridate_1.9.4             forcats_1.0.1              
+## [35] stringr_1.6.0               dplyr_1.1.4                
+## [37] purrr_1.2.2                 readr_2.1.5                
+## [39] tidyr_1.3.1                 tibble_3.3.1               
+## [41] ggplot2_4.0.3               tidyverse_2.0.0            
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] rstudioapi_0.19.0       jsonlite_2.0.0          magrittr_2.0.5         
-##  [4] farver_2.1.2            rmarkdown_2.31          ragg_1.4.0             
-##  [7] fs_1.6.6                zlibbioc_1.48.2         vctrs_0.7.3            
+##  [4] farver_2.1.2            rmarkdown_2.31          fs_1.6.6               
+##  [7] zlibbioc_1.48.2         ragg_1.4.0              vctrs_0.7.3            
 ## [10] multtest_2.58.0         memoise_2.0.1           RCurl_1.98-1.19        
 ## [13] htmltools_0.5.9         S4Arrays_1.2.1          cellranger_1.1.0       
 ## [16] Rhdf5lib_1.24.2         SparseArray_1.2.4       rhdf5_2.46.1           

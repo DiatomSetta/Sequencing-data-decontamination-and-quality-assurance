@@ -453,7 +453,7 @@ asv_prop <- ASV_nested %>%
     ) %>% 
   # calculate the porportion each ASV makes of the the total reads per sample
   mutate(across(-c("seq_id"), ~ .x/sum(.x))) %>%
-  pivot_longer(cols = starts_with("E"),
+  pivot_longer(cols = starts_with("sample"),
                names_to = "sample",
                values_to = "prop_reads") %>% 
   filter(prop_reads > config_file$step12_prop) # identify samples that have ASVs that make up greater than 99% of reads.
