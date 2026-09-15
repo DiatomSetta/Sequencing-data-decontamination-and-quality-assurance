@@ -13,7 +13,7 @@ Main processing steps include:
 
 ![Sequencing data decontamination and quality assurance workflow](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/blob/main/Sequencing-data-decontamination-and-quality-assurance.jpg)
 
-## 🚀 Installation & Setup Instructions
+# 🚀 Installation & Setup Instructions
 
 Part of the OME team and running on OME high-performance computing (HPC) cluster? See the [OME Section](#running-decontamination-and-quality-assurance-with-OME-HPC) for details.
 
@@ -33,6 +33,7 @@ Not part of the OME team or running on local computer? See the [Github Section](
   * Unknown_characters.csv [data]
   * Join_faire_metadata.R (OME group) [scripts]
   * download_neg_con_metadata.R (OME group) [scripts]
+  * combo_nc_assoc_multiple_runs.sh (OME group) [scripts]
   
   *The create_dir_structure.R file will create the directory structure needed for the scripts, but is the same as the PartI_run_inputs directory*
 
@@ -69,7 +70,6 @@ ln -s $eDNA_Bioinformatics/Run1/01_REVAMP/18Sv4/ASV2Taxonomy/18Sv4_asvTaxonomyTa
    
 11. OME team members should update the `Decontam_notes` tab in the `OME_Decontamination_Progress_Notes` spreadsheet in the `OME_Decontamination` project folder with progress and notes on filtering steps. The html file produced by the R markdown file should also be copied to the `Markdown_decontam_output` folder within the same project directory for others to review as needed.
 
-
 ### Part II - Merging across sequencing runs
 
 1. Similar to Part I, download the [`Inputs/PartII_IV_project_inputs/`](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/tree/c9ed8597750e86a2c09bc2929b058a02b9cfedae/Inputs/PartII_IV_project_inputs) folder which includes all the necessary scripts and files (listed below). Scripts specific to the OME group are labeled as such below.
@@ -86,7 +86,24 @@ ln -s $eDNA_Bioinformatics/Run1/01_REVAMP/18Sv4/ASV2Taxonomy/18Sv4_asvTaxonomyTa
   
   *The create_dir_structure.R file will create the directory structure needed for the scripts, but is the same as the PartI_run_inputs directory*
 
-2. Examples of data files are included in `Inputs/PartII_IV_project_inputs/` to test scripts and decontamination pipeline. Files needed for the decontamination pipeline are a metadata file (ex: `processed/decontamination/Metadata_faire.csv`), fasta file (`raw/ASVs.fa`), asv table (`raw/counts.tsv`), and taxonomy table (`taxonomy.txt`).
+2. Examples of data files are included in `Inputs/PartII_IV_project_inputs/` to test scripts and decontamination pipeline. Files needed for the decontamination pipeline are a metadata file (ex: `processed/decontamination/Metadata_faire.csv`), and output from decontamination part I within the processed metabarcoding data folder of interest (e.g. `Run/data/processed/decontamination/18Sv4`). Input files include the nested asv r data file (`ASV_nested_final_partI.RDS`) and the fasta file (`raw/ASVs.fa`), and taxonomy table (`taxonomy.txt`) for each run. 
+*Note the taxonomy file is found using the `tax_file_ext` variable in the config file, which points to the extension for the taxonomy files you are merging across runs.*
+
+3. Before running any scripts rename folders and files as appropriate for the project you are processing (e.g. WCOA21, EcoFOCI, OCNMS, etc.). Then open the parent directory (PartI_run_inputs) in Visual Studio code (VS code), or as an R markdown project.
+   
+4. OME team members should run both the `Join_faire_metadata.R` in the project folder to download the most recent version of the faire metadata spreadsheet. URLs for both can be found on the `Steps_for_processing` tab of the `OME_Decontamination_Progress_Notes` spreadsheet in the `OME_Decontamination` project folder. You will need to log into your google account within your coding environment (VS code, R) to access the files.
+
+5. Edit the config file (`decontam_post-merge_region.yaml`) with the correct paths to each file and region specific filtering information. Examples used for OME group that differ by region, in section below.
+   
+6. Edit the `Run#_Decontam_partII.Rmd`, `Run#_Decontam_partIII.Rmd`, and `Run#_Decontam_partIV.Rmd` R markdown files. In line 1 check the project and in line 7 check the project and metabarcoding region is correct for the html output file. In the first code chunk `load-config-file` edit the config file name to match the decontamination file name you saved (e.g. `decontam_post-merge_region.yaml`).
+   
+7. Run the `Run#_Decontam_partII.Rmd` R markdown file, either chunk by chunk or by knitting the file. This will take a while if merging across multiple runs.
+   
+8. Check output files and edit config file parameters if neccessary.
+
+9. If `Run#_Decontam_partII.Rmd` successfully ran, run `Run#_Decontam_partIII.Rmd`, followed by `Run#_Decontam_partIV.Rmd` R markdown files. Final output files (`Output_csv`) should include an asv table, fasta file, taxonomy file (second version of taxonomy if included in config file), and faire formatted metadata file. Figures for some steps are included in the `Output_plots` folder, and can be used to determine if data quality assurance parameters should change in the config file.
+   
+10. OME team members should update the `Decontam_notes` tab in the `OME_Decontamination_Progress_Notes` spreadsheet in the `OME_Decontamination` project folder with progress and notes on filtering steps. The html file produced by the R markdown file should also be copied to the `Markdown_decontam_output` folder within the same project directory for others to review as needed.
 
 ## Running decontamination and quality assurance with OME HPC
 
@@ -122,15 +139,17 @@ ln -s $eDNA_Bioinformatics/Run1/01_REVAMP/18Sv4/ASV2Taxonomy/18Sv4_asvTaxonomyTa
    
 3. Run `Join_faire_metadata.R` to ensure most updated metadata is downloaded, you will need to login with your gmail credentials to access google sheets.
    
-4. Edit the config file with correct directories, decontamination parameters, marker regions, and runs for project.
+4. Edit the config file (`decontam_post-merge_18Sv4.yaml`) with correct directories, decontamination parameters, marker regions, and runs for project.
    
 5. Edit the `Run#_Decontam_partII.Rmd`, `Run#_Decontam_partIII.Rmd`, and `Run#_Decontam_partIV.Rmd` R markdown files. In line 1 check the project and in line 7 check the project and metabarcoding region is correct for the html output file. In the first code chunk `load-config-file` edit the config file name to match the decontamination file name you saved (e.g. `decontam_post-merge_18Sv4.yaml`).
    
-6. Run the `Run#_Decontam_partI.Rmd` R markdown file, either chunk by chunk or by knitting the file. This will take a while if merging across multiple runs.
+6. Run the `Run#_Decontam_partII.Rmd` R markdown file, either chunk by chunk or by knitting the file. This will take a while if merging across multiple runs.
    
-7. Check output files and edit config file parameters if neccessary. 
+7. Check output files and edit config file parameters if neccessary.
+
+8. If `Run#_Decontam_partII.Rmd` successfully ran, run `Run#_Decontam_partIII.Rmd`, followed by `Run#_Decontam_partIV.Rmd` R markdown files. Final output files (`Output_csv`) should include an asv table, fasta file, taxonomy file (second version of taxonomy if included in config file), and faire formatted metadata file. Figures for some steps are included in the `Output_plots` folder, and can be used to determine if data quality assurance parameters should change in the config file.
    
-8. OME team members should update the `Decontam_notes` tab in the `OME_Decontamination_Progress_Notes` spreadsheet in the `OME_Decontamination` project folder with progress and notes on filtering steps. The html file produced by the R markdown file should also be copied to the `Markdown_decontam_output` folder within the same project directory for others to review as needed.
+9.  OME team members should update the `Decontam_notes` tab in the `OME_Decontamination_Progress_Notes` spreadsheet in the `OME_Decontamination` project folder with progress and notes on filtering steps. The html file produced by the R markdown file should also be copied to the `Markdown_decontam_output` folder within the same project directory for others to review as needed.
 
 ## Disclaimer
 This repository is a scientific product and is not official communication of the National Oceanic and
