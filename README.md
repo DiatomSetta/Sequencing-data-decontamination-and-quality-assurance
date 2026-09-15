@@ -13,7 +13,13 @@ Main processing steps include:
 
 ![Sequencing data decontamination and quality assurance workflow](https://github.com/DiatomSetta/Sequencing-data-decontamination-and-quality-assurance/blob/main/Sequencing-data-decontamination-and-quality-assurance.jpg)
 
-## Running decontamination and quality assurance on sequencing data:
+## 🚀 Installation & Setup Instructions!
+
+Part of the OME team and running on OME high-computing cluster (HPC)? See the [OME Section](#-running-decontamination-and-quality-assurance-with-OME-HPC) for details.
+
+Not part of the OME team or running on local computer? See the [Github Section](#-running-decontamination-and-quality-assurance-with-github-repo-files) for details.
+
+## Running decontamination and quality assurance with github repo files
 
 ### Part I - Decontamination by sequencing run
 
@@ -78,6 +84,34 @@ ln -s $eDNA_Bioinformatics/Run1/01_REVAMP/18Sv4/ASV2Taxonomy/18Sv4_asvTaxonomyTa
   * Join_faire_metadata.R (OME group) [scripts]
   
   *The create_dir_structure.R file will create the directory structure needed for the scripts, but is the same as the PartI_run_inputs directory*
+
+## Running decontamination and quality assurance with OME HPC
+
+### Part I - Decontamination by sequencing run
+
+*Note: OME Runs 1-3 must be run in a particular order, Run 2 and Run 3 must be run before Run 1 for negative control filtering*
+
+  1. Copy one of the run folders from `setta` directory (e.g. `OME_Run1`).
+  2. Check the raw sequencing files you need are in `run/data/raw` directory. If not add symlink to files in the `eDNA_Bioinformatics` directory (see github repo files section Part I Step 2 below).
+  3. Run `Join_faire_metadata.R` to ensure most updated metadata is downloaded, you will need to login with your gmail credentials to access google sheets.
+  4. Run `download_neg_con_metadata.R` to ensure most updated negative control data is downloaded, once again you'll use your gmail credentials to access google sheets.
+  5. If Run 2 and Run 3 are already run and you are on Run 1, run the `combo_nc_assoc_multiple_runs.sh` script to merge negative controls from those runs to use with Run 1. Edit `$BASE_DIR` and `$OUTPUT_FILE` directories to those for your HPC folders.
+  6. Edit the config file (`decontam_pre-merge_18Sv4.yaml`) for the metabarcoding region of interest. 
+  7. Edit the `Run#_Decontam_partI.Rmd` R markdown file. In line 1 check the run number and in line 7 check the run number and metabarcoding region is correct for the html output file. In the first code chunk `load-config` edit the config file name to match the decontamination file name you saved (e.g. `decontam_pre-merge_18Sv4.yaml`).
+  8. Run the `Run#_Decontam_partI.Rmd` R markdown file, either chunk by chunk or by knitting the file.
+  9. If you get errors when running the markdown file, check the end of the `sample_mismatch.csv` file to make sure the final name and asv sample name match. If they don't, you will likely need to edit the `merge-data` r code chunk in the markdown file so the sample names match. Let Sam know if you have to do this so the master code can be edited.
+  10. Update the `OME_Decontamination_Progress_Notes` with any notes and status after completing part I. Upload the `html` output file into the `OME_Decontamination/Markdown_decontam_output` folder in the projects directory.
+
+### Part II-IV - Merging across sequencing runs
+
+   1. Copy one of the project folders from `setta/OME_Projects` directory (e.g. `WCOA21`).
+   2. To run this you will need to reference the processed files from part I of all the sequencing runs this project was run across. This can be specified in the config file (`decontam_post-merge_marker`) in the `parent_dir` variable that sets the parent directory within which all of the processed run data is found with the same directory structure as Run1 decontamination output.
+   3. Run `Join_faire_metadata.R` to ensure most updated metadata is downloaded, you will need to login with your gmail credentials to access google sheets.
+   4. Edit the config file with correct directories, decontamination parameters, marker regions, and runs for project.
+   5. Edit the `Run#_Decontam_partII.Rmd`, `Run#_Decontam_partIII.Rmd`, and `Run#_Decontam_partIV.Rmd` R markdown files. In line 1 check the project and in line 7 check the project and metabarcoding region is correct for the html output file. In the first code chunk `load-config-file` edit the config file name to match the decontamination file name you saved (e.g. `decontam_post-merge_18Sv4.yaml`).
+   6. Run the `Run#_Decontam_partI.Rmd` R markdown file, either chunk by chunk or by knitting the file. This will take a while if merging across multiple runs.
+   7. Check output files and edit config file parameters if neccessary. 
+   8. Update the `OME_Decontamination_Progress_Notes` with any notes and status as each decontamination part is completed. Upload the `html` output file into the `OME_Decontamination/Markdown_decontam_output` folder in the projects directory.
 
 ### Disclaimer
 This repository is a scientific product and is not official communication of the National Oceanic and
