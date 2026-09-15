@@ -15,7 +15,7 @@ Main processing steps include:
 
 ## 🚀 Installation & Setup Instructions!
 
-Part of the OME team and running on OME high-computing cluster (HPC)? See the [OME Section](#running-decontamination-and-quality-assurance-with-OME-HPC) for details.
+Part of the OME team and running on OME high-performance computing (HPC) cluster? See the [OME Section](#running-decontamination-and-quality-assurance-with-OME-HPC) for details.
 
 Not part of the OME team or running on local computer? See the [Github Section](#running-decontamination-and-quality-assurance-with-github-repo-files) for details.
 
