@@ -63,12 +63,11 @@ Load libraries
 
 ```{r setup, warning=FALSE, message=FALSE}
 # install libraries
-# BiocManager::install(c("tidyverse", "lubridate", "RColorBrewer", "ggsci", "dplyr", "phyloseq", "knitr", "readxl","ggplot2","NatParksPalettes","purrr", "ggvenn", "zetadiv"))
+# BiocManager::install(c("tidyverse", "proxy", "reshape2", "microDecon", "knitr", "vegan", "phyloseq", "DESeq2", "ape","RColorBrewer","ggsci","readxl", "here", "optparse","fitdistrplus","configr","Biostrings","NatParksPalettes"))
 
 library("tidyverse")
 library("proxy")
 library("reshape2")
-library("microDecon")
 library("knitr")
 library("vegan")
 library("phyloseq")
@@ -76,7 +75,6 @@ library("DESeq2")
 library("ape")
 library("RColorBrewer")
 library("ggsci")
-library("knitr")
 library("readxl")
 library("here")
 library("optparse")
@@ -95,7 +93,7 @@ source(here("scripts","decontamination","merging_functions.R"))
 
 ### Load config file for processing.
 
-```{r conifg-file, warning=FALSE, message=FALSE}
+```{r config-file, warning=FALSE, message=FALSE}
 # config file name:
 config_file_name <- "decontam_post-merge_18Sv4.yaml"
 
@@ -455,7 +453,7 @@ asv_prop <- ASV_nested %>%
     ) %>% 
   # calculate the porportion each ASV makes of the the total reads per sample
   mutate(across(-c("seq_id"), ~ .x/sum(.x))) %>%
-  pivot_longer(cols = starts_with(config_file$sample_starts_with),
+  pivot_longer(cols = starts_with("E"),
                names_to = "sample",
                values_to = "prop_reads") %>% 
   filter(prop_reads > config_file$step12_prop) # identify samples that have ASVs that make up greater than 99% of reads.
@@ -677,7 +675,7 @@ kable(tail(ASV_summary$Summary, 30))
 
 ## Save final nested files:
 
-```{r warning=FALSE, message=FALSE, eval=FALSE}
+```{r warning=FALSE, message=FALSE}
 # Save summary and nested data
 saveRDS(ASV_nested, file = here(config_file$output_path,
                                 config_file$region,
@@ -692,11 +690,10 @@ saveRDS(ASV_summary, file = here(config_file$output_path,
 
 ### Save final output file of all data:
 
-```{r warning=FALSE, message=FALSE, eval=FALSE}
+```{r warning=FALSE, message=FALSE}
 # final filtered dataframe:
-decontam_final_output<-ASV_nested$step_14_low_depth_pass %>% as.data.frame()
- dplyr::select(step_14_low_depth_pass) %>%
- unnest(step_14_low_depth_pass)
+decontam_final_output <- ASV_nested$step_14_low_depth_pass %>% as.data.frame()
+
 # save dataframe as csv:
 write_csv(decontam_final_output, here(config_file$output_path,
                                             config_file$region,
@@ -711,7 +708,7 @@ write_csv(decontam_final_output, here(config_file$output_path,
 - taxonomy table
 - fasta file
 
-```{r warning=FALSE, message=FALSE, eval=FALSE}
+```{r warning=FALSE, message=FALSE}
 # ASV table:
 partIV_ASV_final_output <- decontam_final_output %>% dplyr::select("seq_id","sample","reads") %>%
   distinct() %>%
@@ -756,7 +753,7 @@ names(merged_seqs_fasta) <- merged_seqs_filt$seq_id
 - taxonomy table
 - fasta file
 
-```{r warning=FALSE, message=FALSE, eval=FALSE}
+```{r warning=FALSE, message=FALSE}
 # save asv tables
 write_csv(partIV_ASV_final_output, file = here(config_file$output_path,
                                                 config_file$region,
@@ -779,7 +776,7 @@ writeXStringSet(merged_seqs_fasta, file = here(config_file$output_path,
 
 ### Including other taxonomy:
 
-```{r warning=FALSE, message=FALSE, eval=FALSE}
+```{r warning=FALSE, message=FALSE}
 if (!is.null(config_file$add_taxonomy)) {
     # load pr2 data: (from Convert_taxa.R)
     pr2_taxa_across_runs <- merge_taxa_output(config_file_name, tax_file_ext=config_file$add_taxa_file_extension)
