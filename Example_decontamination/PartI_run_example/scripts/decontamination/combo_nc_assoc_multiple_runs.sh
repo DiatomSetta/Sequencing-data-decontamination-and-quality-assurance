@@ -4,7 +4,7 @@
 
 # Configuration - Adjust the base search directory and naming schema
 # change with parent directory of runs 1-3:
-BASE_DIR="/home/poseidon/setta"
+BASE_DIR="path/to/your/directorythatcontainsruns1to3"
 FILE_PATTERN="nc_associated_multiple_runs.txt"
 OUTPUT_FILE="$BASE_DIR/OME_Run1/data/processed/decontamination/nc_associated_multiple_runs.txt"
 REGION="18Sv4"
