@@ -38,7 +38,7 @@ Not part of the OME team or running on local computer? See the [Github Section](
 
 2. Examples of data files are included in `Inputs/PartI_run_inputs/` to test scripts and decontamination pipeline. Files needed for the decontamination pipeline are a metadata file (ex: `processed/decontamination/Metadata_faire.csv`), fasta file (`raw/ASVs.fa`), asv table (`raw/counts.tsv`), and taxonomy table (`taxonomy.txt`).
    
-3. OME team members should copy the sequencing files from the `eDNA_Bioinformatics` directory to `data/raw` with symlink (see example below). Need to copy three files for Part I, fasta sequencing file (.fa), asv count table (.tsv), and taxonomy table (can include multiple here but all should be tab-delimited). To create symlink to original file location and save space. Note, you need the absolute directory path to correctly reference the original file.
+3. OME team members should copy the sequencing files from the `eDNA_Bioinformatics` directory to `data/raw` with [symlink](https://en.wikipedia.org/wiki/Symbolic_link) (see example below). Need to copy three files for Part I, fasta sequencing file (.fa), asv count table (.tsv), and taxonomy table (can include multiple here but all should be tab-delimited). To create symlink to original file location and save space. Note, you need the absolute directory path to correctly reference the original file.
 
 ```
 # For asv table:
@@ -96,7 +96,7 @@ ln -s $eDNA_Bioinformatics/Run1/01_REVAMP/18Sv4/ASV2Taxonomy/18Sv4_asvTaxonomyTa
 
 1. Copy one of the run folders from `setta` directory (e.g. `OME_Run1`).
 
-2. Check the raw sequencing files you need are in `run/data/raw` directory. If not add symlink to files in the `eDNA_Bioinformatics` directory (see [github repo files section](#running-decontamination-and-quality-assurance-with-github-repo-files) Part I Step 2 above).
+2. Check the raw sequencing files you need are in `run/data/raw` directory. If not add [symlink](https://en.wikipedia.org/wiki/Symbolic_link) to files in the `eDNA_Bioinformatics` directory (see [github repo files section](#running-decontamination-and-quality-assurance-with-github-repo-files) Part I Step 2 above).
 
 3. Run `Join_faire_metadata.R` to ensure most updated metadata is downloaded, you will need to login with your gmail credentials to access google sheets.
    
